@@ -44,7 +44,7 @@ Este sistema automatiza estos procesos mediante lógica de negocio y consultas S
 
 ## Funcionalidades principales
 
-### estión de alumnos
+### Gestión de alumnos
 - Crear, actualizar, eliminar y consultar alumnos
 - Información básica (nombre, semestre, carrera, etc.)
 
