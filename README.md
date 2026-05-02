@@ -84,12 +84,13 @@ Un alumno no puede tener dos materias en el mismo horario.
 
 El proyecto sigue una arquitectura en capas:
 
+- DTOs → Transferencia de datosServidor_API
 - Controllers → Manejo de endpoints
-- Services → Lógica de negocio
+- Helpers → Utilidades
+- Middlewares → Interceptar requests/responses globalmente
+- Models  → Entidades
 - Repositories → Acceso a datos
-- Models → Entidades
-- DTOs → Transferencia de datos
-
+- Services → Lógica de negocio
 ---
 
 ## Endpoints principales
