@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Servidor_API.Models;
 
 namespace Servidor_DTOS.DTOS.Auth
 {
@@ -16,6 +17,6 @@ namespace Servidor_DTOS.DTOS.Auth
 
         public string Username { get; set; }
 
-        public string Rol { get; set; }
+        public List<RolDTO>? Roles { get; set; }
     }
 }

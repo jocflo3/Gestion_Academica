@@ -6,5 +6,6 @@ namespace Servidor_API.Repositories.Interfaces
     {
         Task<Usuario?> ObtenerPorUsername(string username);
         Task ActualizarRefreshToken(int idUsuario,string refreshToken,DateTime expiracion);
+        Task RegistraUsuario(Usuario user);
     }
 }

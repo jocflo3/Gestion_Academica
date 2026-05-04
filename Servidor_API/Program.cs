@@ -18,6 +18,7 @@ builder.Services.AddScoped<DapperContext>();
 builder.Services.AddScoped<IUsuarioRepository, UsuarioRepository>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IBitacoraRepository, BitacoraRepository>();
+builder.Services.AddScoped<IUsuarioService, UsuarioService>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

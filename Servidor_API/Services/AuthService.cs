@@ -27,13 +27,17 @@ namespace Servidor_API.Services
             {
                 throw new Exception("Usuario no encontrado");
             }
-            if (string.IsNullOrWhiteSpace(usuario.PasswordHash))
+            if (string.IsNullOrWhiteSpace(request.Password))
             {
                 throw new Exception("Contraseña requerida");
             }
             if (!usuario.Activo)
             {
                 throw new Exception("Usuario no activo");
+            }
+            if (usuario.Roles == null)
+            {
+                throw new Exception("Usuario sin rol definido");
             }
             var passwordValido = BCrypt.Net.BCrypt.Verify(request.Password,usuario.PasswordHash);
 
@@ -49,7 +53,7 @@ namespace Servidor_API.Services
 
             var refreshExpiration = DateTime.Now.AddDays(7);
 
-            await _usuarioRepository.ActualizarRefreshToken(usuario.idUsuario,refreshToken, refreshExpiration);
+            await _usuarioRepository.ActualizarRefreshToken(usuario.IdUsuario,refreshToken, refreshExpiration);
 
             return new LoginResponseDTO
             {
@@ -57,42 +61,34 @@ namespace Servidor_API.Services
                 Expiration = expiration,
                 RefreshToken = refreshToken,
                 Username = usuario.UserName,
-                Rol = usuario.Rol
+                Roles = usuario.Roles.Select(r => new RolDTO 
+                {
+                    IdRol = r.IdRol,
+                    DescRol = r.DescRol
+                }).ToList()
             };
         }
 
-        private string GenerarToken(
-            Usuario usuario,
-            DateTime expiration)
+        private string GenerarToken(Usuario usuario,DateTime expiration)
         {
             var jwtSettings =
                 _configuration.GetSection("Jwt");
 
-            var key =
-                new SymmetricSecurityKey(
-                    Encoding.UTF8.GetBytes(
-                        jwtSettings["Key"]));
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings["Key"]));
 
-            var credentials =
-                new SigningCredentials(
-                    key,
-                    SecurityAlgorithms.HmacSha256);
+            var credentials = new SigningCredentials(key,SecurityAlgorithms.HmacSha256);
 
-            var claims = new[]
+            var claims = new List<Claim>
             {
-                new Claim(
-                    ClaimTypes.NameIdentifier,
-                    usuario.idUsuario.ToString()),
+                new Claim(ClaimTypes.NameIdentifier,usuario.IdUsuario.ToString()),
 
-                new Claim(
-                    ClaimTypes.Name,
-                    usuario.UserName),
+                new Claim(ClaimTypes.Name,usuario.UserName),
 
-                new Claim(
-                    ClaimTypes.Role,
-                    usuario.Rol)
             };
-
+            foreach (var rol in usuario.Roles)
+            {
+                claims.Add(new Claim(ClaimTypes.Role,rol.DescRol));
+            }
             var token =
                 new JwtSecurityToken(
                     issuer: jwtSettings["Issuer"],
@@ -102,8 +98,7 @@ namespace Servidor_API.Services
                     signingCredentials: credentials
                 );
 
-            return new JwtSecurityTokenHandler()
-                .WriteToken(token);
+            return new JwtSecurityTokenHandler().WriteToken(token);
         }
 
         private string GenerarRefreshToken()
