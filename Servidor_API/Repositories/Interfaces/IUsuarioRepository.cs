@@ -5,6 +5,6 @@ namespace Servidor_API.Repositories.Interfaces
     public interface IUsuarioRepository
     {
         Task<Usuario?> ObtenerPorUsername(string username);
-
+        Task ActualizarRefreshToken(int idUsuario,string refreshToken,DateTime expiracion);
     }
 }

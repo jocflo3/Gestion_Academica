@@ -26,5 +26,22 @@ namespace Servidor_API.Repositories
 
             return usuario;
         }
+        public async Task ActualizarRefreshToken(int idUsuario, string refreshToken, DateTime expiracion)
+        {
+            var sql = @"UPDATE USUARIO
+                        SET
+                            REFRESH_TOKEN = @RefreshToken,
+                            REFRESH_TOKEN_EXP = @Expiracion
+                        WHERE ID_USUARIO = @IdUsuario";
+
+            using var connection = _context.CreateConnection();
+
+            await connection.ExecuteAsync(sql, new
+            {
+                IdUsuario = idUsuario,
+                RefreshToken = refreshToken,
+                Expiracion = expiracion
+            });
+        }
     }
 }
