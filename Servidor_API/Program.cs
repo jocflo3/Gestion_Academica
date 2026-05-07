@@ -16,9 +16,11 @@ builder.Services.AddSwaggerGen();
 //Servicios creados por mi
 builder.Services.AddScoped<DapperContext>();
 builder.Services.AddScoped<IUsuarioRepository, UsuarioRepository>();
-builder.Services.AddScoped<IAuthService, AuthService>();
-builder.Services.AddScoped<IBitacoraRepository, BitacoraRepository>();
 builder.Services.AddScoped<IUsuarioService, UsuarioService>();
+builder.Services.AddScoped<IAuthService, AuthService>();
+builder.Services.AddScoped<IAuthRepository, AuthRepository>();
+builder.Services.AddScoped<IBitacoraRepository, BitacoraRepository>();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

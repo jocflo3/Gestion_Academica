@@ -4,6 +4,7 @@ using Servidor_API.Models;
 using Servidor_API.Repositories.Interfaces;
 using Servidor_API.Services.Interfaces;
 using Servidor_DTOS.DTOS.Auth;
+using Servidor_DTOS.DTOS.Usuario;
 using System.Data;
 
 namespace Servidor_API.Services
@@ -16,7 +17,7 @@ namespace Servidor_API.Services
             _usuarioRepository = usuarioRepository;
         }
 
-        public async Task RegistraUsuario(UsuarioDTO user)
+        public async Task RegistraUsuario(RegistrarUsuarioDTO user)
         {
             var Roles = user.Roles.Select(r => new Rol
               {

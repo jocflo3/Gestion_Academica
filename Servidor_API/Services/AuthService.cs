@@ -4,6 +4,7 @@ using Microsoft.IdentityModel.Tokens;
 using Servidor_API.Models;
 using Servidor_API.Repositories.Interfaces;
 using Servidor_DTOS.DTOS.Auth;
+using Servidor_DTOS.DTOS.Rol;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
@@ -12,17 +13,17 @@ namespace Servidor_API.Services
 {
     public class AuthService : IAuthService
     {
-        public readonly IUsuarioRepository _usuarioRepository;
+        public readonly IAuthRepository _authRepository;
         public readonly IConfiguration _configuration;
 
-        public AuthService(IUsuarioRepository usuarioRepository, IConfiguration configuration){
+        public AuthService(IAuthRepository authRepository, IConfiguration configuration){
             _configuration = configuration;
-            _usuarioRepository= usuarioRepository;
+            _authRepository = authRepository;
         }
 
         public async Task<LoginResponseDTO> Login(LoginRequestDTO request)
         {
-            var usuario = await _usuarioRepository.ObtenerPorUsername(request.Username);
+            var usuario = await _authRepository.ObtenerPorUsername(request.Username);
             if (usuario == null)
             {
                 throw new Exception("Usuario no encontrado");
@@ -53,7 +54,7 @@ namespace Servidor_API.Services
 
             var refreshExpiration = DateTime.Now.AddDays(7);
 
-            await _usuarioRepository.ActualizarRefreshToken(usuario.IdUsuario,refreshToken, refreshExpiration);
+            await _authRepository.ActualizarRefreshToken(usuario.IdUsuario,refreshToken, refreshExpiration);
 
             return new LoginResponseDTO
             {

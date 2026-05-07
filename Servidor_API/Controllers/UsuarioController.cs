@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Servidor_API.Models;
 using Servidor_API.Services.Interfaces;
 using Servidor_DTOS.DTOS.Auth;
+using Servidor_DTOS.DTOS.Usuario;
 
 namespace Servidor_API.Controllers
 {
@@ -17,7 +17,7 @@ namespace Servidor_API.Controllers
         }
 
         [HttpPost("RegistrarUsuario")]
-        public async Task<IActionResult> RegistraUsuario(UsuarioDTO user)
+        public async Task<IActionResult> RegistraUsuario(RegistrarUsuarioDTO user)
         {
             try
             {

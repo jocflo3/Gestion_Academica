@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Servidor_API.Models;
+using Servidor_DTOS.DTOS.Rol;
 
 namespace Servidor_DTOS.DTOS.Auth
 {
