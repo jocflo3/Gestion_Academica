@@ -7,5 +7,6 @@ namespace Servidor_API.Repositories.Interfaces
     {
         Task RegistraUsuario(Usuario user);
         Task<List<ListUsuarioDTO>> ObtenerUsuarios(bool? SoloActivos);
+        Task<bool> EliminaUsuario(string username);
     }
 }

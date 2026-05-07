@@ -85,5 +85,23 @@ namespace Servidor_API.Repositories
 
             return usuarios.ToList();
         }
+
+        public async Task<bool> EliminaUsuario(string username)
+        {//Solo desactivo el usuario para mantener concordancia con la bitacora.
+            try
+            {
+                var sql = @"UPDATE USUARIO SET ACTIVO = 0, FH_MOD = GETDATE() WHERE USERNAME = @Username AND ACTIVO = 1" ;
+
+                using var connection = _context.CreateConnection();
+
+                var rowsAffected =  await connection.ExecuteAsync(sql, new { Username = username });
+
+                return rowsAffected > 0;
+            }
+            catch
+            {
+                throw;
+            }
+        }
     }
 }

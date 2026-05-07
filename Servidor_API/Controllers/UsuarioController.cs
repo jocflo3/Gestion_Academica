@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Servidor_API.Models;
 using Servidor_API.Services.Interfaces;
 using Servidor_DTOS.DTOS.Auth;
 using Servidor_DTOS.DTOS.Usuario;
@@ -35,6 +36,27 @@ namespace Servidor_API.Controllers
             {
                 var Usuarios = await _userService.ObtenerUsuarios(SoloActivos);
                 return Ok(Usuarios);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest("Ocurrio un error al registrar: " + ex.Message);
+            }
+        }
+        [HttpDelete("EliminarUsuario")]
+        public async Task<IActionResult> EliminaUsuario(string username)
+        {
+            try
+            {
+                var correcto = await _userService.EliminarUsuario(username);
+                if (correcto)
+                {
+                    return Ok("Usuario eliminado correctamente");
+
+                }
+                else
+                {
+                    return BadRequest("Usuario no encontrado");
+                }
             }
             catch (Exception ex)
             {

@@ -44,5 +44,9 @@ namespace Servidor_API.Services
 
             return Usuarios;
         }
+        public async Task<bool> EliminarUsuario(string username)
+        {
+            return await _usuarioRepository.EliminaUsuario(username);
+        }
     }
 }
