@@ -1,6 +1,7 @@
 ﻿using Dapper;
 using Servidor_API.Models;
 using Servidor_API.Repositories.Interfaces;
+using Servidor_DTOS.DTOS.Usuario;
 using System.Data.SqlTypes;
 
 namespace Servidor_API.Repositories
@@ -65,7 +66,24 @@ namespace Servidor_API.Repositories
                 transaction.Rollback();
                 throw;
             }
+        }
+        public async Task<List<ListUsuarioDTO>> ObtenerUsuarios(bool? SoloActivos)
+        {
+            var sql = @"SELECT 
+	                        ID_USUARIO AS IdUsuario,
+	                        USERNAME AS UserName,
+	                        NO_CONTROL AS IdAlumno,
+	                        ID_PROFE AS IdProfesor,
+	                        ACTIVO AS Activo,
+	                        FH_ALTA AS FhAlta,
+	                        FH_MOD AS FhMod
+                        FROM USUARIO WHERE ACTIVO = @Activo OR @Activo IS NULL";
 
+            using var connection = _context.CreateConnection();
+
+            var usuarios = await connection.QueryAsync<ListUsuarioDTO>(sql, new {Activo = SoloActivos});
+
+            return usuarios.ToList();
         }
     }
 }

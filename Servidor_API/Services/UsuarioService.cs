@@ -1,6 +1,9 @@
 ﻿using BCrypt.Net;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
+using Servidor_API.Controllers;
 using Servidor_API.Models;
+using Servidor_API.Repositories;
 using Servidor_API.Repositories.Interfaces;
 using Servidor_API.Services.Interfaces;
 using Servidor_DTOS.DTOS.Auth;
@@ -34,6 +37,12 @@ namespace Servidor_API.Services
                 Roles = Roles
             };
             await _usuarioRepository.RegistraUsuario(usuario);
+        }
+        public async Task<List<ListUsuarioDTO>> ObtenerUsuarios(bool? SoloActivos)
+        {
+            var Usuarios = await _usuarioRepository.ObtenerUsuarios(SoloActivos);
+
+            return Usuarios;
         }
     }
 }

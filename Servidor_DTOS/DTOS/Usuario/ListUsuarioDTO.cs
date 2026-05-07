@@ -3,7 +3,7 @@ using System;
 
 namespace Servidor_DTOS.DTOS.Usuario
 {
-    public class UsuarioDTO
+    public class ListUsuarioDTO
     {
         public int IdUsuario { get; set; }
         public string UserName {  get; set; }

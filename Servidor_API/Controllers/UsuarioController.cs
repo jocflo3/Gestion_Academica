@@ -28,5 +28,18 @@ namespace Servidor_API.Controllers
                 return BadRequest("Ocurrio un error al registrar: "+ex.Message);
             }
         }
+        [HttpGet("ObtenerUsuarios")]
+        public async Task<IActionResult> RegistraUsuario(bool? SoloActivos)
+        {
+            try
+            {
+                var Usuarios = await _userService.ObtenerUsuarios(SoloActivos);
+                return Ok(Usuarios);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest("Ocurrio un error al registrar: " + ex.Message);
+            }
+        }
     }
 }

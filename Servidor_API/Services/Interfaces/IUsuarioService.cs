@@ -5,5 +5,6 @@ namespace Servidor_API.Services.Interfaces
     public interface IUsuarioService
     {
         Task RegistraUsuario(RegistrarUsuarioDTO usuario);
+        Task<List<ListUsuarioDTO>> ObtenerUsuarios(bool? SoloActivos);
     }
 }
