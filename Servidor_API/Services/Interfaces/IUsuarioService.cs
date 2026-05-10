@@ -6,6 +6,7 @@ namespace Servidor_API.Services.Interfaces
     {
         Task RegistraUsuario(RegistrarUsuarioDTO usuario);
         Task<List<ListUsuarioDTO>> ObtenerUsuarios(bool? SoloActivos);
-        Task<bool> EliminarUsuario(string username);
+        Task<bool> EliminarUsuario(int idUser);
+        Task<bool> ActualizarUsuario(int username, ActualizaUsuarioDTO usuario);
     }
 }

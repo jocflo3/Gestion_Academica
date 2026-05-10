@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Servidor_API.Models;
 using Servidor_API.Services.Interfaces;
 using Servidor_DTOS.DTOS.Auth;
@@ -6,6 +7,7 @@ using Servidor_DTOS.DTOS.Usuario;
 
 namespace Servidor_API.Controllers
 {
+    [Authorize]
     [ApiController]
     [Route("api/[controller]")]
     public class UsuarioService: ControllerBase
@@ -17,7 +19,7 @@ namespace Servidor_API.Controllers
             _userService = userService;
         }
 
-        [HttpPost("RegistrarUsuario")]
+        [HttpPost]
         public async Task<IActionResult> RegistraUsuario(RegistrarUsuarioDTO user)
         {
             try
@@ -29,7 +31,7 @@ namespace Servidor_API.Controllers
                 return BadRequest("Ocurrio un error al registrar: "+ex.Message);
             }
         }
-        [HttpGet("ObtenerUsuarios")]
+        [HttpGet]
         public async Task<IActionResult> RegistraUsuario(bool? SoloActivos)
         {
             try
@@ -42,8 +44,9 @@ namespace Servidor_API.Controllers
                 return BadRequest("Ocurrio un error al registrar: " + ex.Message);
             }
         }
-        [HttpDelete("EliminarUsuario")]
-        public async Task<IActionResult> EliminaUsuario(string username)
+        [Authorize(Roles = "Administrador")]
+        [HttpDelete("{username}")]
+        public async Task<IActionResult> EliminaUsuario(int username)
         {
             try
             {
@@ -55,7 +58,28 @@ namespace Servidor_API.Controllers
                 }
                 else
                 {
-                    return BadRequest("Usuario no encontrado");
+                    return NotFound("Usuario no encontrado");
+                }
+            }
+            catch (Exception ex)
+            {
+                return BadRequest("Ocurrio un error al registrar: " + ex.Message);
+            }
+        }
+        [HttpPut("{idUser}")]
+        public async Task<IActionResult> ActializarUsuario(int idUser,ActualizaUsuarioDTO user)
+        {
+            try
+            {
+                var correcto = await _userService.ActualizarUsuario(idUser, user);
+                if (correcto)
+                {
+                    return Ok("Usuario eliminado correctamente");
+
+                }
+                else
+                {
+                    return NotFound("Usuario no encontrado");
                 }
             }
             catch (Exception ex)

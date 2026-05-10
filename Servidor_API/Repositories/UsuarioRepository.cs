@@ -86,15 +86,32 @@ namespace Servidor_API.Repositories
             return usuarios.ToList();
         }
 
-        public async Task<bool> EliminaUsuario(string username)
+        public async Task<bool> EliminaUsuario(int idUser)
         {//Solo desactivo el usuario para mantener concordancia con la bitacora.
             try
             {
-                var sql = @"UPDATE USUARIO SET ACTIVO = 0, FH_MOD = GETDATE() WHERE USERNAME = @Username AND ACTIVO = 1" ;
+                var sql = @"UPDATE USUARIO SET ACTIVO = 0, FH_MOD = GETDATE() WHERE ID_USUARIO = @idUser AND ACTIVO = 1";
 
                 using var connection = _context.CreateConnection();
 
-                var rowsAffected =  await connection.ExecuteAsync(sql, new { Username = username });
+                var rowsAffected =  await connection.ExecuteAsync(sql, new { idUser = idUser });
+
+                return rowsAffected > 0;
+            }
+            catch
+            {
+                throw;
+            }
+        }
+        public async Task<bool> ActualizaUsuario(int idUser, Usuario usuario)
+        {//Solo desactivo el usuario para mantener concordancia con la bitacora.
+            try
+            {
+                var sql = @"UPDATE USUARIO SET ACTIVO = 0, FH_MOD = GETDATE() WHERE ID_USUARIO = @idUser AND ACTIVO = 1";
+
+                using var connection = _context.CreateConnection();
+
+                var rowsAffected = await connection.ExecuteAsync(sql, new { idUser = idUser });
 
                 return rowsAffected > 0;
             }

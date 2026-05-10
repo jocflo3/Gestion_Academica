@@ -44,9 +44,26 @@ namespace Servidor_API.Services
 
             return Usuarios;
         }
-        public async Task<bool> EliminarUsuario(string username)
+        public async Task<bool> EliminarUsuario(int idUser)
         {
-            return await _usuarioRepository.EliminaUsuario(username);
+            return await _usuarioRepository.EliminaUsuario(idUser);
+        }
+        public async Task<bool> ActualizarUsuario(int idUser, ActualizaUsuarioDTO user)
+        {
+            var Roles = user.Roles.Select(r => new Rol
+            {
+                IdRol = r.IdRol,
+                DescRol = ""
+            }).ToList();
+            var usuario = new Usuario
+            {
+                UserName = user.UserName,
+                IdAlumno = user.IdAlumno,
+                IdProfesor = user.IdProfesor,
+                Activo = user.Activo,
+                Roles = Roles
+            };
+            return await _usuarioRepository.ActualizaUsuario(idUser,usuario);
         }
     }
 }
