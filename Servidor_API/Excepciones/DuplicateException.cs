@@ -10,7 +10,7 @@ namespace Servidor_API.Excepciones
 
         public DuplicateException(string Entidad, object Clave, bool esFemenino = false)
             : base($"{Entidad} {Clave} ya {ConditionalHelper.Select(esFemenino, "registrada", "registrado")}",
-                404,
+                409,
                 "DUPLICATED")
         {
             EntityName = Entidad;

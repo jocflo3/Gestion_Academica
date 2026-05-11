@@ -7,7 +7,7 @@ using Servidor_DTOS.DTOS.Usuario;
 
 namespace Servidor_API.Controllers
 {
-    //[Authorize]
+    [Authorize]
     [ApiController]
     [Route("api/[controller]")]
     public class UsuarioService: ControllerBase
@@ -33,7 +33,7 @@ namespace Servidor_API.Controllers
             return Ok(Usuarios);
         }
 
-        //[Authorize(Roles = "Administrador")]
+        [Authorize(Roles = "Administrador")]
         [HttpDelete("{userid}")]
         public async Task<IActionResult> EliminaUsuario(int userid)
         {

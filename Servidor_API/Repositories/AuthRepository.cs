@@ -1,4 +1,5 @@
 ﻿using Dapper;
+using Servidor_API.Excepciones;
 using Servidor_API.Models;
 using Servidor_API.Repositories.Interfaces;
 using Servidor_API.Services.Interfaces;
@@ -26,8 +27,9 @@ namespace Servidor_API.Repositories
             var usuario = await connection.QueryFirstOrDefaultAsync<Usuario>(sql, new { Username = username });
             if (usuario == null)
             {
-                return null;
+                throw new NotFoundException("Usuario", username);
             }
+
             var sqlRol = @"SELECT
                              R.ID_ROL as IdRol,
                              R.DESC_ROL as DescRol

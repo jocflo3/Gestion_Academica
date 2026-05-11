@@ -112,17 +112,19 @@ namespace Servidor_API.Repositories
             {
                 sql = @"SELECT COUNT(*) FROM USUARIO WHERE ID_USUARIO = @idUser";
                 rowsAffected = await _connection.ExecuteScalarAsync<int>(sql, new { idUser = Campo });
+                if (rowsAffected == 0)
+                {
+                    throw new NotFoundException("Usuario", Campo);
+                }
             }
             else 
             { 
                 sql = @"SELECT COUNT(*) FROM USUARIO WHERE UPPER(USERNAME) = UPPER(@userName)";
                 rowsAffected = await _connection.ExecuteScalarAsync<int>(sql, new { userName = Campo });
-            }
-
-
-            if (rowsAffected == 0)
-            {
-                throw new NotFoundException("Usuario", Campo);
+                if (rowsAffected != 0)
+                {
+                    throw new DuplicateException("Usuario", Campo);
+                }
             }
         }
     }

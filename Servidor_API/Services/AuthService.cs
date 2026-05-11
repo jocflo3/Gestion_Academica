@@ -8,6 +8,7 @@ using Servidor_DTOS.DTOS.Rol;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using Servidor_API.Excepciones;
 
 namespace Servidor_API.Services
 {
@@ -24,27 +25,24 @@ namespace Servidor_API.Services
         public async Task<LoginResponseDTO> Login(LoginRequestDTO request)
         {
             var usuario = await _authRepository.ObtenerPorUsername(request.Username);
-            if (usuario == null)
-            {
-                throw new Exception("Usuario no encontrado");
-            }
+
             if (string.IsNullOrWhiteSpace(request.Password))
             {
-                throw new Exception("Contraseña requerida");
+                throw new ValidationException("Contraseña requerida");
             }
             if (!usuario.Activo)
             {
-                throw new Exception("Usuario no activo");
+                throw new ForbiddenException("Usuario inactivo");
             }
             if (usuario.Roles == null)
             {
-                throw new Exception("Usuario sin rol definido");
+                throw new ForbiddenException("Usuario sin roles");
             }
             var passwordValido = BCrypt.Net.BCrypt.Verify(request.Password,usuario.PasswordHash);
 
             if (!passwordValido)
             {
-                throw new Exception("Contraseña incorrecta");
+                throw new UnauthorizedException("Contraseña incorrecta");
             }
             var expiration = DateTime.Now.AddMinutes(Convert.ToDouble(_configuration["Jwt:ExpireMinutes"]));
 

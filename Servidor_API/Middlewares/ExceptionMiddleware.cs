@@ -73,19 +73,6 @@ namespace Servidor_API.Middlewares
                 usuario,
                 ip
             );
-
-            context.Response.ContentType = "application/json";
-
-            context.Response.StatusCode = 500;
-
-            var response = new
-            {
-                mensaje = ex.Message
-            };
-
-            var json = System.Text.Json.JsonSerializer.Serialize(response);
-
-            await context.Response.WriteAsync(json);
         }
     }
 }
