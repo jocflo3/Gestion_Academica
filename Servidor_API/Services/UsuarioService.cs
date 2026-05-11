@@ -20,7 +20,7 @@ namespace Servidor_API.Services
             _usuarioRepository = usuarioRepository;
         }
 
-        public async Task<bool> RegistraUsuario(RegistrarUsuarioDTO user)
+        public async Task RegistraUsuario(RegistrarUsuarioDTO user)
         {
             var Roles = user.Roles.Select(r => new Rol
               {
@@ -36,7 +36,7 @@ namespace Servidor_API.Services
                 Activo = user.Activo,
                 Roles = Roles
             };
-            return await _usuarioRepository.RegistraUsuario(usuario);
+            await _usuarioRepository.RegistraUsuario(usuario);
         }
         public async Task<List<ListUsuarioDTO>> ObtenerUsuarios(bool? SoloActivos)
         {
@@ -44,11 +44,11 @@ namespace Servidor_API.Services
 
             return Usuarios;
         }
-        public async Task<bool> EliminarUsuario(int idUser)
+        public async Task EliminarUsuario(int idUser)
         {
-            return await _usuarioRepository.EliminaUsuario(idUser);
+            await _usuarioRepository.EliminaUsuario(idUser);
         }
-        public async Task<bool> ActualizarUsuario(int idUser, ActualizaUsuarioDTO user)
+        public async Task ActualizarUsuario(int idUser, ActualizaUsuarioDTO user)
         {
             var Roles = user.Roles.Select(r => new Rol
             {
@@ -63,7 +63,7 @@ namespace Servidor_API.Services
                 Activo = user.Activo,
                 Roles = Roles
             };
-            return await _usuarioRepository.ActualizaUsuario(idUser,usuario);
+            await _usuarioRepository.ActualizaUsuario(idUser,usuario);
         }
     }
 }

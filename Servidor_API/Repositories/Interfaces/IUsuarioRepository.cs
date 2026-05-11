@@ -5,9 +5,9 @@ namespace Servidor_API.Repositories.Interfaces
 {
     public interface IUsuarioRepository
     {
-        Task<bool> RegistraUsuario(Usuario user);
+        Task RegistraUsuario(Usuario user);
         Task<List<ListUsuarioDTO>> ObtenerUsuarios(bool? SoloActivos);
-        Task<bool> EliminaUsuario(int idUser);
-        Task<bool> ActualizaUsuario(int idUser, Usuario usuario);
+        Task EliminaUsuario(int idUser);
+        Task ActualizaUsuario(int idUser, Usuario usuario);
     }
 }
