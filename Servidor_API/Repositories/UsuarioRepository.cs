@@ -14,7 +14,7 @@ namespace Servidor_API.Repositories
         {
             _context = context;
         }
-        public async Task RegistraUsuario(Usuario user)
+        public async Task<bool> RegistraUsuario(Usuario user)
         {
 
             using var connection = _context.CreateConnection();
@@ -33,7 +33,7 @@ namespace Servidor_API.Repositories
                         SELECT CAST(SCOPE_IDENTITY() as int)";
 
 
-                var userid = await connection.ExecuteScalarAsync(sql, new
+                var userid = await connection.ExecuteScalarAsync<int>(sql, new
                 {
                     User = user.UserName,
                     Hash = user.PasswordHash,
@@ -42,6 +42,11 @@ namespace Servidor_API.Repositories
                     Activo = user.Activo
                 }, transaction);
 
+                if (userid <= 0)
+                {
+                    transaction.Rollback();
+                    return false;
+                }
                 var sqlRol = @"INSERT INTO USUARIO_ROL(ID_USUARIO,ID_ROL)
                         VALUES(
                             @User,
@@ -50,16 +55,21 @@ namespace Servidor_API.Repositories
 
                 foreach (var rol in user.Roles)
                 {
-                    await connection.ExecuteAsync(
+                    var rowsAffected = await connection.ExecuteAsync(
                         sqlRol,
                         new
                         {
                             User = userid,
                             Rol = rol.IdRol
                         }, transaction);
-                }
-
+                    if (rowsAffected == 0)
+                    {
+                        transaction.Rollback();
+                        return false;
+                    }
+                }                
                 transaction.Commit();
+                return true;
             }
             catch
             {
@@ -69,21 +79,28 @@ namespace Servidor_API.Repositories
         }
         public async Task<List<ListUsuarioDTO>> ObtenerUsuarios(bool? SoloActivos)
         {
-            var sql = @"SELECT 
-	                        ID_USUARIO AS IdUsuario,
-	                        USERNAME AS UserName,
-	                        NO_CONTROL AS IdAlumno,
-	                        ID_PROFE AS IdProfesor,
-	                        ACTIVO AS Activo,
-	                        FH_ALTA AS FhAlta,
-	                        FH_MOD AS FhMod
-                        FROM USUARIO WHERE ACTIVO = @Activo OR @Activo IS NULL";
+            try 
+            { 
+                var sql = @"SELECT 
+	                            ID_USUARIO AS IdUsuario,
+	                            USERNAME AS UserName,
+	                            NO_CONTROL AS IdAlumno,
+	                            ID_PROFE AS IdProfesor,
+	                            ACTIVO AS Activo,
+	                            FH_ALTA AS FhAlta,
+	                            FH_MOD AS FhMod
+                            FROM USUARIO WHERE ACTIVO = @Activo OR @Activo IS NULL";
 
-            using var connection = _context.CreateConnection();
+                using var connection = _context.CreateConnection();
 
-            var usuarios = await connection.QueryAsync<ListUsuarioDTO>(sql, new {Activo = SoloActivos});
+                var usuarios = await connection.QueryAsync<ListUsuarioDTO>(sql, new {Activo = SoloActivos});
 
             return usuarios.ToList();
+            }
+            catch
+            {
+                throw;
+            }
         }
 
         public async Task<bool> EliminaUsuario(int idUser)

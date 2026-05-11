@@ -20,7 +20,7 @@ namespace Servidor_API.Services
             _usuarioRepository = usuarioRepository;
         }
 
-        public async Task RegistraUsuario(RegistrarUsuarioDTO user)
+        public async Task<bool> RegistraUsuario(RegistrarUsuarioDTO user)
         {
             var Roles = user.Roles.Select(r => new Rol
               {
@@ -36,7 +36,7 @@ namespace Servidor_API.Services
                 Activo = user.Activo,
                 Roles = Roles
             };
-            await _usuarioRepository.RegistraUsuario(usuario);
+            return await _usuarioRepository.RegistraUsuario(usuario);
         }
         public async Task<List<ListUsuarioDTO>> ObtenerUsuarios(bool? SoloActivos)
         {

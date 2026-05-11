@@ -4,7 +4,7 @@ namespace Servidor_API.Services.Interfaces
 {
     public interface IUsuarioService
     {
-        Task RegistraUsuario(RegistrarUsuarioDTO usuario);
+        Task<bool> RegistraUsuario(RegistrarUsuarioDTO usuario);
         Task<List<ListUsuarioDTO>> ObtenerUsuarios(bool? SoloActivos);
         Task<bool> EliminarUsuario(int idUser);
         Task<bool> ActualizarUsuario(int username, ActualizaUsuarioDTO usuario);

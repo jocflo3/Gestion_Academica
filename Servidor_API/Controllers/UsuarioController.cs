@@ -24,24 +24,37 @@ namespace Servidor_API.Controllers
         {
             try
             {
-                await _userService.RegistraUsuario(user);
-                return Ok("Registrado correctamente");
+                var usuario = await _userService.RegistraUsuario(user);
+                if (usuario)
+                {
+                    return Ok($"Registrado correctamente");
+                }
+                else
+                {
+                    return NotFound("Usuario no registrado");
+                }
             }
             catch (Exception ex) {
-                return BadRequest("Ocurrio un error al registrar: "+ex.Message);
+                return StatusCode(500, "Ocurrio un error al registrar: " +ex.Message);
             }
         }
         [HttpGet]
-        public async Task<IActionResult> RegistraUsuario(bool? SoloActivos)
+        public async Task<IActionResult> ObtenerUsuario(bool? SoloActivos)
         {
             try
             {
                 var Usuarios = await _userService.ObtenerUsuarios(SoloActivos);
-                return Ok(Usuarios);
+                if (Usuarios!= null) {
+                    return Ok(Usuarios);
+                }
+                else
+                {
+                    return NotFound();
+                }  
             }
             catch (Exception ex)
             {
-                return BadRequest("Ocurrio un error al registrar: " + ex.Message);
+                return StatusCode(500, "Ocurrio un error al consultar: " + ex.Message);
             }
         }
         [Authorize(Roles = "Administrador")]
@@ -58,33 +71,33 @@ namespace Servidor_API.Controllers
                 }
                 else
                 {
-                    return NotFound("Usuario no encontrado");
+                    return NotFound("Usuario no eliminado");
                 }
             }
             catch (Exception ex)
             {
-                return BadRequest("Ocurrio un error al registrar: " + ex.Message);
+                return StatusCode(500, "Ocurrio un error al registrar: " + ex.Message);
             }
         }
         [HttpPut("{idUser}")]
-        public async Task<IActionResult> ActializarUsuario(int idUser,ActualizaUsuarioDTO user)
+        public async Task<IActionResult> ActualizarUsuario(int idUser,ActualizaUsuarioDTO user)
         {
             try
             {
                 var correcto = await _userService.ActualizarUsuario(idUser, user);
                 if (correcto)
                 {
-                    return Ok("Usuario eliminado correctamente");
+                    return Ok("Usuario actualizado correctamente");
 
                 }
                 else
                 {
-                    return NotFound("Usuario no encontrado");
+                    return NotFound("Usuario no actualizado");
                 }
             }
             catch (Exception ex)
             {
-                return BadRequest("Ocurrio un error al registrar: " + ex.Message);
+                return StatusCode(500, "Ocurrio un error al actualizar: " + ex.Message);
             }
         }
     }
